@@ -1,9 +1,8 @@
-<mat-card style="min-height: 500px;">
+<mat-card>
   <mat-card-header>
     <h1 >NESTED TABLE</h1>
   </mat-card-header>
   <mat-card-content>
-
     <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
       <ng-container matColumnDef="{{innerColumn}}" *ngFor="let innerColumn of getColumnKeys()">
         <th mat-sort-header mat-header-cell *matHeaderCellDef>{{innerColumn | titlecase }}</th>
@@ -32,10 +31,5 @@
       <tr mat-row *matRowDef="let element; columns:getColumnKeys()" (click)="toggle(element)"></tr>
       <tr mat-row *matRowDef="let row; columns:['expandedDetail']" class="example-detail-row"></tr>
     </table>
-
   </mat-card-content>
-  <br>
-  <mat-card-footer>
-
-  </mat-card-footer>
 </mat-card>
