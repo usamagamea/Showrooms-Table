@@ -9,7 +9,7 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from 'src/app/shared/material/material/material.module';
+import { MaterialModule } from 'src/app/shared/material/material.module';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import {
@@ -23,6 +23,7 @@ import { DataService } from '../../services/data.service';
 import { CarShowroom } from '../../models/interface/CarShowroom';
 import { columns } from '../../models/constants/columns';
 import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'nested-table',
@@ -48,6 +49,7 @@ export class NestedTableComponent implements OnInit , OnDestroy {
 
   readonly #dataService = inject(DataService);
   readonly #cdr = inject(ChangeDetectorRef);
+ 
 
   subscription = new Subscription();
   dataSource!: MatTableDataSource<CarShowroom>;
@@ -55,7 +57,7 @@ export class NestedTableComponent implements OnInit , OnDestroy {
   nestedToDisplay = columns;
   expandedElement!: CarShowroom | null;
   companyList!: CarShowroom|any;
-
+  nestedData!: CarShowroom|any;
 
 
   ngOnInit(): void {
@@ -76,9 +78,9 @@ export class NestedTableComponent implements OnInit , OnDestroy {
     this.subscription.add(
       this.#dataService.getNestedData(id).subscribe(
         response => {
-          let nestedData = response;
-          console.log('Nested data loaded:',nestedData);
-          this.expandedElement = nestedData.response.data;
+          this.nestedData = response;
+          console.log('Nested data loaded:',this.nestedData);
+          this.expandedElement = this.nestedData.response.data;
         }
       )
     );

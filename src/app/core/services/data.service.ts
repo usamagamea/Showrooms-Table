@@ -14,8 +14,8 @@ export class DataService {
     return this.#http.get<CarShowroom>(REST.apiUrl);
   }
 
-  getNestedData(id: number): Observable<any> {
+  getNestedData(id: number): Observable<CarShowroom> {
     const url = `${REST.nestedUrl}/${id}`;
-    return this.#http.get<any>(url);
+    return this.#http.get<CarShowroom>(url);
   }
 }

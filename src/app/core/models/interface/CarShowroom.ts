@@ -1,7 +1,7 @@
 export interface CarShowroom {
   response: Data[];
   status: Status[];
-  totalCount: number;
+  totalCount?: number;
 }
 
  interface Status {
