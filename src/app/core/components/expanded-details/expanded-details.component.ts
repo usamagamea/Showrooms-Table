@@ -1,5 +1,4 @@
 import {
-  AfterContentChecked,
   ChangeDetectorRef,
   Component,
   Input,
@@ -29,7 +28,6 @@ export class ExpandedDetailsComponent implements OnChanges, OnDestroy {
   readonly #dataService = inject(DataService);
   readonly #cdr = inject(ChangeDetectorRef);
 
-  nestedData: any;
   nestedItems: any;
   subscription = new Subscription();
   dataNestedSource!: MatTableDataSource<any>;
@@ -42,8 +40,8 @@ export class ExpandedDetailsComponent implements OnChanges, OnDestroy {
   private loadNestedData(id: number): void {
     this.subscription.add(
       this.#dataService.getNestedData(id).subscribe((response) => {
-        this.nestedData = response;
-        this.nestedItems = this.nestedData.response.requestItems[0];
+        let nestedData = response;
+        this.nestedItems = nestedData.response.requestItems[0];
         // this.dataNestedSource = new MatTableDataSource(this.nestedItems);
         console.log('nested data', this.nestedItems);
         this.#cdr.detectChanges();
