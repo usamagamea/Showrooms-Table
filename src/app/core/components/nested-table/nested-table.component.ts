@@ -1,4 +1,5 @@
 import {
+  AfterViewChecked,
   ChangeDetectorRef,
   Component,
   OnDestroy,
@@ -20,15 +21,15 @@ import {
   trigger,
 } from '@angular/animations';
 import { DataService } from '../../services/data.service';
-import { CarShowroom } from '../../models/interface/CarShowroom';
+import { CarShowroom, DataTable } from '../../models/interface/CarShowroom';
 import { columns } from '../../models/constants/columns';
 import { Subscription } from 'rxjs';
-
+import { ExpandedDetailsComponent } from '../expanded-details/expanded-details.component';
 
 @Component({
   selector: 'nested-table',
   standalone: true,
-  imports: [CommonModule, MaterialModule],
+  imports: [CommonModule, MaterialModule, ExpandedDetailsComponent],
   templateUrl: './nested-table.component.html',
   styleUrls: ['./nested-table.component.css'],
   animations: [
@@ -42,66 +43,67 @@ import { Subscription } from 'rxjs';
     ]),
   ],
 })
-export class NestedTableComponent implements OnInit , OnDestroy {
+export class NestedTableComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChildren('innerTable') innerTable!: QueryList<MatTable<any>>;
   @ViewChildren('innerSort') innerSort!: QueryList<MatSort>;
 
   readonly #dataService = inject(DataService);
   readonly #cdr = inject(ChangeDetectorRef);
- 
 
-  subscription = new Subscription();
   dataSource!: MatTableDataSource<CarShowroom>;
-  columnsToDisplay = columns;
+  dataNestedSource!: MatTableDataSource<any>;
+  subscription = new Subscription();
   nestedToDisplay = columns;
-  expandedElement!: CarShowroom | null;
-  companyList!: CarShowroom|any;
-  nestedData!: CarShowroom|any;
-
+  expandedElement!: DataTable | null;
+  companyList!: CarShowroom | any;
+  nestedItems: any;
 
   ngOnInit(): void {
     this.loadMainData();
-   // call for test
-    this.loadNestedData(20998);
   }
   private loadMainData(): void {
     this.subscription.add(
       this.#dataService.getData().subscribe((response) => {
-      this.companyList = response;
-      this.dataSource = new MatTableDataSource(this.companyList.response.data);
-      this.dataSource.sort = this.sort;
-    }));
-  }
-
-  private  loadNestedData(id:number): void {
-    this.subscription.add(
-      this.#dataService.getNestedData(id).subscribe(
-        response => {
-          this.nestedData = response;
-          console.log('Nested data loaded:',this.nestedData);
-          this.expandedElement = this.nestedData.response.data;
-        }
-      )
+        this.companyList = response;
+        this.dataSource = new MatTableDataSource(
+          this.companyList.response.data
+        );
+        this.dataSource.sort = this.sort;
+      })
     );
   }
 
- protected getColumnKeys(): string[] {
+  private loadNestedData(id: number): void {
+    this.subscription.add(
+      this.#dataService.getNestedData(id).subscribe((response) => {
+        let nestedData = response;
+        this.nestedItems = nestedData.response.requestItems[0];
+        if (Array.isArray(this.nestedItems)) {
+          this.companyList.forEach((company: DataTable) => {
+            if (company.id === id) {
+              company.requestItems = this.nestedItems;
+            }
+          });
+          this.dataNestedSource = new MatTableDataSource(this.nestedItems);
+        }
+        console.log('nested data', this.nestedItems);
+        this.#cdr.detectChanges();
+      })
+    );
+  }
+
+  protected toggle(element: DataTable) {
+    this.expandedElement = this.expandedElement === element ? null : element;
+    this.loadNestedData(element.id);
+    this.#cdr.detectChanges();
+  }
+
+  protected getColumnKeys(): string[] {
     if (this.companyList?.response?.data.length > 0) {
       return Object.keys(this.companyList.response.data[0]);
     }
     return [];
-  }
-
-  protected toggle(element: CarShowroom) {
-    this.expandedElement = this.expandedElement === element ? null : element;
-    this.loadNestedData(element.response[0].data[0].id);
-    this.innerTable.forEach(
-      (table, index) =>
-        ((table.dataSource as MatTableDataSource<CarShowroom>).sort =
-          this.innerSort.toArray()[index])
-    );
-    this.#cdr.detectChanges();
   }
 
   ngOnDestroy(): void {

@@ -1,8 +1,9 @@
 export const columns: string[] = [
-  'Id',
-  'Name',
-  'Code',
-  'Address',
-  'Phone1',
-  'Email',
+  'approvedBy',
+  'approvedDate',
+  'location',
+  'remarks',
+  'vehicle_brand',
+  'type',
+  'vehicle_value',
 ];
