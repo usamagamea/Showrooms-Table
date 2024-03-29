@@ -7,3 +7,16 @@ export const columns: string[] = [
   'type',
   'vehicle_value',
 ];
+
+export const NestedColumns: string[] = [
+  'budgeted',
+  'position',
+  'location',
+  'hiring_date',
+  'username',
+  'status',
+  'description',
+  'reason',
+  'remarks',
+  'type',
+];

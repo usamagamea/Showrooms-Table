@@ -1,7 +1,6 @@
 import {
   ChangeDetectorRef,
   Component,
-  Input,
   OnDestroy,
   OnInit,
   QueryList,
@@ -22,10 +21,9 @@ import {
 } from '@angular/animations';
 import { DataService } from '../../services/data.service';
 import { CarShowroom, DataTable } from '../../models/interface/CarShowroom';
-import { columns } from '../../models/constants/columns';
 import { Subscription } from 'rxjs';
 import { ExpandedDetailsComponent } from '../expanded-details/expanded-details.component';
-import { NestedDetails } from '../../models/interface/NestedDetails';
+import { NestedColumns, columns } from '../../models/constants/columns';
 
 @Component({
   selector: 'nested-table',
@@ -45,7 +43,6 @@ import { NestedDetails } from '../../models/interface/NestedDetails';
   ],
 })
 export class NestedTableComponent implements OnInit, OnDestroy {
-  @Input() id: number = 22455;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChildren('innerTable') innerTable!: QueryList<MatTable<any>>;
   @ViewChildren('innerSort') innerSort!: QueryList<MatSort>;
@@ -54,12 +51,10 @@ export class NestedTableComponent implements OnInit, OnDestroy {
   readonly #cdr = inject(ChangeDetectorRef);
 
   dataSource!: MatTableDataSource<CarShowroom>;
-  dataNestedSource!: MatTableDataSource<NestedDetails>;
   subscription = new Subscription();
-  nestedToDisplay = columns;
   expandedElement!: DataTable | null;
   companyList!: CarShowroom | any;
-  nestedItems: any[] = [];
+  displayedColumns = columns;
 
   ngOnInit(): void {
     this.loadMainData();
@@ -76,27 +71,8 @@ export class NestedTableComponent implements OnInit, OnDestroy {
     );
   }
 
-  private loadNestedData(id: number): void {
-    this.subscription.add(
-      this.#dataService.getNestedData(id).subscribe((response) => {
-        let nestedData = response;
-        if (Array.isArray(nestedData.response.requestItems)) {
-          this.nestedItems = nestedData.response.requestItems[0];
-        } else {
-          this.nestedItems = Object.entries(
-            nestedData.response.requestItems[0]
-          ).map(([key, value]) => ({ key, value }));
-        }
-        this.dataNestedSource = new MatTableDataSource(this.nestedItems);
-
-        this.#cdr.detectChanges();
-      })
-    );
-  }
-
-  protected toggle(element: any) {
+  protected toggle(element: DataTable) {
     this.expandedElement = this.expandedElement === element ? null : element;
-    this.loadNestedData(element.id);
     this.#cdr.detectChanges();
   }
 
@@ -105,10 +81,6 @@ export class NestedTableComponent implements OnInit, OnDestroy {
       return Object.keys(this.companyList.response.data[0]);
     }
     return [];
-  }
-
-  protected getObjectKeys(obj: any): string[] {
-    return Object.keys(obj);
   }
 
   ngOnDestroy(): void {

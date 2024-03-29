@@ -14,6 +14,8 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'src/app/shared/material/material.module';
 import { Subscription } from 'rxjs';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { NestedDetails } from '../../models/interface/NestedDetails';
+import { NestedColumns } from '../../models/constants/columns';
 
 @Component({
   selector: 'expanded-details',
@@ -28,9 +30,10 @@ export class ExpandedDetailsComponent implements OnChanges, OnDestroy {
   readonly #dataService = inject(DataService);
   readonly #cdr = inject(ChangeDetectorRef);
 
-  nestedItems: any = [];
+  nestedItems: NestedDetails[] = [];
+  displayedColumns = NestedColumns;
   subscription = new Subscription();
-  dataNestedSource!: MatTableDataSource<any>;
+  dataNestedSource!: MatTableDataSource<NestedDetails>;
 
   ngOnChanges(): void {
     if (this.id !== undefined) {
@@ -43,10 +46,6 @@ export class ExpandedDetailsComponent implements OnChanges, OnDestroy {
         let nestedData = response;
         if (Array.isArray(nestedData.response.requestItems)) {
           this.nestedItems = nestedData.response.requestItems[0];
-        } else {
-          this.nestedItems = Object.entries(
-            nestedData.response.requestItems[0]
-          ).map(([key, value]) => ({ key, value }));
         }
         this.dataNestedSource = new MatTableDataSource(this.nestedItems);
         console.log('test', this.nestedItems);
