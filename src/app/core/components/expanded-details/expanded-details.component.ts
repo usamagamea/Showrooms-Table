@@ -32,6 +32,7 @@ export class ExpandedDetailsComponent implements OnChanges, OnDestroy {
   nestedItems: ResponseDto[] = [];
   displayedColumns = MainNestedColumns;
   subscription = new Subscription();
+  nestedItemsArray: any[] = [];
   dataNestedSource: MatTableDataSource<NestedDetails> =
     new MatTableDataSource();
 
@@ -40,16 +41,18 @@ export class ExpandedDetailsComponent implements OnChanges, OnDestroy {
       this.loadNestedData(this.id);
     }
   }
+
   private loadNestedData(id: number): void {
     this.subscription.add(
       this.#dataService.getNestedData(id).subscribe((response) => {
-        let nestedData: NestedDetails = response;
+        let nestedData: any = response;
 
-        this.dataNestedSource = new MatTableDataSource<NestedDetails>(
-          nestedData.response as NestedDetails[]
+        let nestedItems = nestedData.response?.requestItems[0];
+        this.nestedItemsArray = Object.entries(nestedItems);
+        this.dataNestedSource = new MatTableDataSource(
+          this.nestedItemsArray as NestedDetails[]
         );
-        this.nestedItems = nestedData.response as ResponseDto[];
-        console.log('test', this.nestedItems);
+
         this.#cdr.detectChanges();
       })
     );

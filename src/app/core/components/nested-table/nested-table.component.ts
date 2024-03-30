@@ -23,11 +23,7 @@ import { DataService } from '../../services/data.service';
 import { CarShowroom, DataTable } from '../../models/interface/CarShowroom';
 import { Subscription } from 'rxjs';
 import { ExpandedDetailsComponent } from '../expanded-details/expanded-details.component';
-import { MainNestedColumns } from '../../models/constants/columns';
-import {
-  NestedDetails,
-  ResponseDto,
-} from '../../models/interface/NestedDetails';
+import { NestedDetails } from '../../models/interface/NestedDetails';
 
 @Component({
   selector: 'nested-table',
@@ -59,7 +55,8 @@ export class NestedTableComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   expandedElement!: DataTable | null;
   companyList!: CarShowroom | any;
-  nestedItemsArray: any[] = [];
+  nestedItemsArray: NestedDetails[] = [];
+  nestedListItems: NestedDetails[] = [];
 
   ngOnInit(): void {
     this.loadMainData();
@@ -90,7 +87,8 @@ export class NestedTableComponent implements OnInit, OnDestroy {
         let nestedData: any = response;
 
         let nestedItems = nestedData.response?.requestItems[0];
-        this.nestedItemsArray = Object.entries(nestedItems);
+        this.nestedListItems = nestedItems;
+        this.nestedItemsArray = Object.entries(nestedItems) as NestedDetails[];
         this.dataNestedSource = new MatTableDataSource(
           this.nestedItemsArray as NestedDetails[]
         );
