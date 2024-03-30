@@ -1,4 +1,5 @@
 import { MatTableDataSource } from '@angular/material/table';
+import { RequestItems } from './NestedDetails';
 
 export interface CarShowroom {
   response: Data[];
@@ -28,7 +29,7 @@ export interface DataTable {
   requestedby_name: string;
   vehicleNumber: string;
   code: string;
-  requestItems: MatTableDataSource<any>;
+  requestItems: MatTableDataSource<RequestItems>;
 }
 
 interface Data {

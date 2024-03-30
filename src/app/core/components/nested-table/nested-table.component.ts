@@ -24,6 +24,7 @@ import { CarShowroom, DataTable } from '../../models/interface/CarShowroom';
 import { Subscription } from 'rxjs';
 import { ExpandedDetailsComponent } from '../expanded-details/expanded-details.component';
 import { NestedDetails } from '../../models/interface/NestedDetails';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'nested-table',
@@ -51,6 +52,7 @@ export class NestedTableComponent implements OnInit, OnDestroy {
   readonly #cdr = inject(ChangeDetectorRef);
 
   dataNestedSource!: MatTableDataSource<NestedDetails>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource!: MatTableDataSource<CarShowroom>;
   subscription = new Subscription();
   expandedElement!: DataTable | null;
@@ -69,6 +71,7 @@ export class NestedTableComponent implements OnInit, OnDestroy {
           this.companyList.response.data as CarShowroom[]
         );
         this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
       })
     );
   }
