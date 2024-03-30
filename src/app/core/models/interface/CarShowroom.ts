@@ -16,7 +16,7 @@ export interface CarRequest {
   vehicle_value: number;
 }
 
-interface Status {
+export interface Status {
   code: number;
   message: string;
 }

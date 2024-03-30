@@ -1,22 +1,35 @@
 export const columns: string[] = [
-  'approvedBy',
-  'approvedDate',
-  'location',
-  'remarks',
-  'vehicle_brand',
-  'type',
-  'vehicle_value',
-];
-
-export const NestedColumns: string[] = [
+  'id',
+  'username',
   'budgeted',
   'position',
   'location',
-  'hiring_date',
-  'username',
-  'status',
-  'description',
-  'reason',
   'remarks',
   'type',
+  'status',
+  'reason',
+];
+
+export const NestedColumns: string[] = [
+  ...columns,
+  'approvedBy',
+  'hiring_date',
+  'description',
+  'vehicle_plate_no',
+  'vehicle_value',
+  'vehicle_brand',
+  'vehicle_model',
+];
+
+export const MainNestedColumns: string[] = [
+  'id',
+  'code',
+  'date',
+  'status',
+  'requestedby_id',
+  'approvedby_id',
+  'parent',
+  'remarks',
+  'requestedby_name',
+  'approvedby_name',
 ];

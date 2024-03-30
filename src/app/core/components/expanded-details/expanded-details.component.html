@@ -1,29 +1,51 @@
-<table mat-table [dataSource]="dataNestedSource" matSort>
+<table mat-table [dataSource]="dataNestedSource.filteredData" matSort>
 
-  <!-- name Column -->
-  <ng-container matColumnDef="username">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> username </th>
-    <td mat-cell *matCellDef="let row"> {{row.username}} </td>
+  <!-- id Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> id </th>
+    <td mat-cell *matCellDef="let row"> {{row.id}} </td>
   </ng-container>
 
-  <!-- position Column -->
-  <ng-container matColumnDef="position">
+  <!-- code Column -->
+  <ng-container matColumnDef="code">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> code </th>
+    <td mat-cell *matCellDef="let row"> {{row.code}} </td>
+  </ng-container>
+
+  <!-- remarks Column -->
+  <ng-container matColumnDef="remarks">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      position
+      remarks
     </th>
-    <td mat-cell *matCellDef="let row"> {{row.position}} </td>
+    <td mat-cell *matCellDef="let row"> {{row.remarks}} </td>
+  </ng-container>
+
+  <!-- requestedby_name Column -->
+  <ng-container matColumnDef="requestedby_name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      requestedby_name
+    </th>
+    <td mat-cell *matCellDef="let row"> {{row.requestedby_name}} </td>
+  </ng-container>
+
+  <!-- approvedby_name Column -->
+  <ng-container matColumnDef="approvedby_name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      approvedby_name
+    </th>
+    <td mat-cell *matCellDef="let row"> {{row.approvedby_name}} </td>
   </ng-container>
 
   <!--location Column -->
-  <ng-container matColumnDef="location">
+  <!-- <ng-container matColumnDef="location">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> location </th>
     <td mat-cell *matCellDef="let row"> {{row.location}} </td>
-  </ng-container>
+  </ng-container> -->
 
   <!-- Date  -->
-  <ng-container matColumnDef="hiring_date">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> hiringDate </th>
-    <td mat-cell *matCellDef="let row"> {{row.hiring_date | date:'MMM d, y'}} </td>
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+    <td mat-cell *matCellDef="let row"> {{row.date | date:'MMM d, y'}} </td>
   </ng-container>
 
   <!-- status -->
@@ -33,38 +55,100 @@
   </ng-container>
 
   <!-- description -->
-  <ng-container matColumnDef="description">
+  <!-- <ng-container matColumnDef="description">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> description </th>
     <td mat-cell *matCellDef="let row"> {{row.description}} </td>
-  </ng-container>
+  </ng-container> -->
 
   <!-- reason -->
-  <ng-container matColumnDef="reason">
+  <!-- <ng-container matColumnDef="reason">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
       reason
     </th>
     <td mat-cell *matCellDef="let row"> {{row.reason}} </td>
-  </ng-container>
+  </ng-container> -->
 
   <!-- remarks -->
-  <ng-container matColumnDef="remarks">
+  <!-- <ng-container matColumnDef="remarks">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> remarks </th>
     <td mat-cell *matCellDef="let row"> {{row.remarks}} </td>
-  </ng-container>
+  </ng-container> -->
 
   <!-- type -->
-  <ng-container matColumnDef="type">
+  <!-- <ng-container matColumnDef="type">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
       type
     </th>
     <td mat-cell *matCellDef="let row"> {{row.type}} </td>
-  </ng-container>
+  </ng-container> -->
 
   <!-- budgeted -->
-  <ng-container matColumnDef="budgeted">
+  <!-- <ng-container matColumnDef="budgeted">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> budgeted </th>
     <td mat-cell *matCellDef="let row"> {{row.budgeted | currency:'$'}} </td>
+  </ng-container> -->
+
+  <!-- Date  -->
+  <!-- <ng-container matColumnDef="date_of_last_repair">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> last repair </th>
+    <td mat-cell *matCellDef="let row"> {{row.date_of_last_repair | date:'MMM d, y'}} </td>
+  </ng-container> -->
+
+  <!-- vehicle_plate_no -->
+  <!-- <ng-container matColumnDef="vehicle_plate_no">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      vehicle plate no
+    </th>
+    <td mat-cell *matCellDef="let row"> {{row.vehicle_plate_no}} </td>
+  </ng-container> -->
+
+  <!-- vehicle_model -->
+  <!-- <ng-container matColumnDef="vehicle_model">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      vehicle model
+    </th>
+    <td mat-cell *matCellDef="let row"> {{row.vehicle_model}} </td>
+  </ng-container> -->
+  <!-- vehicle_value -->
+  <!-- <ng-container matColumnDef="vehicle_value">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      vehicle value
+    </th>
+    <td mat-cell *matCellDef="let row"> {{row.vehicle_value}} </td>
+  </ng-container> -->
+  <!-- vehicle_brand -->
+  <!-- <ng-container matColumnDef="vehicle_brand">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      vehicle brand
+    </th>
+    <td mat-cell *matCellDef="let row"> {{row.vehicle_brand}} </td>
+  </ng-container> -->
+
+
+
+  <!-- approvedBy-->
+  <ng-container matColumnDef="approvedby_id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      approved by id
+    </th>
+    <td mat-cell *matCellDef="let row"> {{row.approvedby_id}} </td>
   </ng-container>
+
+  <!-- requestedby_id-->
+  <ng-container matColumnDef="requestedby_id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      requested by id
+    </th>
+    <td mat-cell *matCellDef="let row"> {{row.requestedby_id}} </td>
+  </ng-container>
+  <!-- parent-->
+  <ng-container matColumnDef="parent">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      parent
+    </th>
+    <td mat-cell *matCellDef="let row"> {{row.parent}} </td>
+  </ng-container>
+
 
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

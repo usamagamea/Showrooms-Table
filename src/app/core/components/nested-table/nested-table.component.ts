@@ -23,7 +23,11 @@ import { DataService } from '../../services/data.service';
 import { CarShowroom, DataTable } from '../../models/interface/CarShowroom';
 import { Subscription } from 'rxjs';
 import { ExpandedDetailsComponent } from '../expanded-details/expanded-details.component';
-import { NestedColumns, columns } from '../../models/constants/columns';
+import { MainNestedColumns } from '../../models/constants/columns';
+import {
+  NestedDetails,
+  ResponseDto,
+} from '../../models/interface/NestedDetails';
 
 @Component({
   selector: 'nested-table',
@@ -50,11 +54,12 @@ export class NestedTableComponent implements OnInit, OnDestroy {
   readonly #dataService = inject(DataService);
   readonly #cdr = inject(ChangeDetectorRef);
 
+  dataNestedSource!: MatTableDataSource<NestedDetails>;
   dataSource!: MatTableDataSource<CarShowroom>;
   subscription = new Subscription();
   expandedElement!: DataTable | null;
   companyList!: CarShowroom | any;
-  displayedColumns = columns;
+  nestedItemsArray: any[] = [];
 
   ngOnInit(): void {
     this.loadMainData();
@@ -64,7 +69,7 @@ export class NestedTableComponent implements OnInit, OnDestroy {
       this.#dataService.getData().subscribe((response) => {
         this.companyList = response;
         this.dataSource = new MatTableDataSource(
-          this.companyList.response.data
+          this.companyList.response.data as CarShowroom[]
         );
         this.dataSource.sort = this.sort;
       })
@@ -73,7 +78,34 @@ export class NestedTableComponent implements OnInit, OnDestroy {
 
   protected toggle(element: DataTable) {
     this.expandedElement = this.expandedElement === element ? null : element;
+    if (this.expandedElement) {
+      this.loadNestedData(element.id);
+    }
     this.#cdr.detectChanges();
+  }
+
+  private loadNestedData(id: number): void {
+    this.subscription.add(
+      this.#dataService.getNestedData(id).subscribe((response) => {
+        let nestedData: any = response;
+
+        let nestedItems = nestedData.response?.requestItems[0];
+        this.nestedItemsArray = Object.entries(nestedItems);
+        this.dataNestedSource = new MatTableDataSource(
+          this.nestedItemsArray as NestedDetails[]
+        );
+
+        this.#cdr.detectChanges();
+      })
+    );
+  }
+
+  protected getObjectKeys(obj: NestedDetails[]): string[] {
+    if (obj.length > 0) {
+      return Object.keys(obj[0]);
+    } else {
+      return [];
+    }
   }
 
   protected getColumnKeys(): string[] {
